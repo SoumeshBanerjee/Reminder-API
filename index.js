@@ -1,10 +1,7 @@
+require('dotenv').config();
 const express = require('express')
-const path = require('path')
-const PORT = process.env.PORT || 8081
+const { Routes } = require("./src/Router/routes")
 
-express()
-    .use(express.static(path.join(__dirname, process.env.STATIC_DIR || 'dist')))
-    .get('/user', (req, res) => {
-        res.send({ok:true})
-    })
-    .listen(PORT, () => console.log(`Listening on ${PORT}`))
+const router = new Routes(express())
+router.registerAllRoutes()
+router.listen(process.env.PORT || 8081, () => console.log(`Listening on ${process.env.PORT || 8081}`))
