@@ -1,0 +1,26 @@
+{
+  "name": "reminder-api",
+  "version": "1.0.0",
+  "description": "Reminder API is backend for the Reminder",
+  "main": "index.js",
+  "engines": {
+    "node": "11.10.x"
+  },
+  "scripts": {
+    "start": "node ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SoumeshBanerjee/Reminder-API.git"
+  },
+  "author": "Soumesh Banerjee <soumeshbanerjee@live.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/SoumeshBanerjee/Reminder-API/issues"
+  },
+  "homepage": "https://github.com/SoumeshBanerjee/Reminder-API#readme",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4"
+  }
+}
