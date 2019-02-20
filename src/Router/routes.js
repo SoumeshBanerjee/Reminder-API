@@ -103,27 +103,47 @@ class Routes {
             })
             .post('/reminders', Routes.needsAuthorization, async (req, resp) => {
                 try {
-                    if (!req.body.description || !req.body.owner || !req.body.due) {
-                        Routes.sendErrorResponse(resp, 400, `all the fields description, owner and due is required`)
+                    if (!req.body.description || !req.body.due) {
+                        Routes.sendErrorResponse(resp, 400, `all the fields description and due is required`)
                     }
-                    let r = await Reminder.create(SingeltonDatalayer, req.body.owner, req.body.description, req.body.due)
+                    let r = await Reminder.create(SingeltonDatalayer, Routes.getSessionCookie(req), req.body.description, req.body.due)
                     resp.send(r)
                 } catch (error) {
                     Routes.sendErrorResponse(resp, 500, `Failed to create reminder, maybe the user not registered properly ${error}`)
                 }
             })
-            .patch('/reminders/done/:id', Routes.needsAuthorization, async (req, res) => {
-                if (!req.params.id) {
-                    Routes.sendErrorResponse(resp, 400, `To mark a reminder done, id is mandatory`)
+            .patch('/reminders/done/:id', Routes.needsAuthorization, async (req, resp) => {
+                try {
+                    if (!req.params.id) {
+                        Routes.sendErrorResponse(resp, 400, `To mark a reminder done, id is mandatory`)
+                    }
+                    let r = await Reminder.done(SingeltonDatalayer, req.params.id, Routes.getSessionCookie(req))
+                    resp.send(r)
+                } catch (error) {
+                    Routes.sendErrorResponse(resp, 500, `Failed to mark reminder done ${error}`)
                 }
             })
-            .patch('/reminders/undone/:id', Routes.needsAuthorization, async (req, res) => {
-                if (!req.params.id) {
-                    Routes.sendErrorResponse(resp, 400, `To mark a reminder undone, id is mandatory`)
+            .patch('/reminders/undone/:id', Routes.needsAuthorization, async (req, resp) => {
+                try {
+                    if (!req.params.id) {
+                        Routes.sendErrorResponse(resp, 400, `To mark a reminder undone, id is mandatory`)
+                    }
+                    let r = await Reminder.undone(SingeltonDatalayer, req.params.id, Routes.getSessionCookie(req))
+                    resp.send(r)
+                } catch (error) {
+                    Routes.sendErrorResponse(resp, 500, `Failed to mark reminder undone ${error}`)
                 }
             })
-            .delete('/reminders/:id', Routes.needsAuthorization, async (req, res) => {
-
+            .delete('/reminders/:id', Routes.needsAuthorization, async (req, resp) => {
+                try {
+                    if (!req.params.id) {
+                        Routes.sendErrorResponse(resp, 400, `To delete a reminder, id is mandatory`)
+                    }
+                    let r = await Reminder.delete(SingeltonDatalayer, req.params.id, Routes.getSessionCookie(req))
+                    resp.send(r)
+                } catch (error) {
+                    Routes.sendErrorResponse(resp, 500, `Failed to delete reminder ${error}`)
+                }
             })
     }
 }

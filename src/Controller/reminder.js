@@ -13,7 +13,7 @@ class Reminder {
     }
     static async getAll(connectionPool, token) {
         let resp = await Datalayer.executeQuery(connectionPool, {
-            query: `SELECT * FROM reminders WHERE owner = ?`,
+            query: `SELECT id, description, due, completed FROM reminders WHERE owner = ?`,
             queryValue: [token]
         })
         if (!resp.ok) {
@@ -21,14 +21,31 @@ class Reminder {
         }
         return resp
     }
-    static async done() {
-
+    static async _update(connectionPool, id, owner, completeValue) {
+        let resp = await Datalayer.executeQuery(connectionPool, {
+            query: `UPDATE reminders set completed = ${completeValue} WHERE id = ? AND owner = ?`,
+            queryValue: [id, owner]
+        })
+        if (!resp.ok) {
+            throw new Error(`Error fetching record from SQL ${resp}`)
+        }
+        return resp
     }
-    static async delete() {
-
+    static async delete(connectionPool, id, owner) {
+        let resp = await Datalayer.executeQuery(connectionPool, {
+            query: `DELETE from reminders WHERE id = ? AND owner = ?`,
+            queryValue: [id, owner]
+        })
+        if (!resp.ok) {
+            throw new Error(`Error fetching record from SQL ${resp}`)
+        }
+        return resp
     }
-    static async undone() {
-
+    static done(connectionPool, id, owner) {
+        return Reminder._update(connectionPool, id, owner, 1)
+    }
+    static async undone(connectionPool, id, owner) {
+        return Reminder._update(connectionPool, id, owner, 0)
     }
 }
 

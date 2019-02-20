@@ -15,7 +15,8 @@ class Datalayer {
             host: this.host,
             user: this.username,
             password: this.password,
-            database: this.database
+            database: this.database,
+            dateStrings: true
         })
     }
     static executeQuery(dataLayerInstance, config) {
