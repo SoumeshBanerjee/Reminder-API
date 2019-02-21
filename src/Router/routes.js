@@ -112,6 +112,20 @@ class Routes {
                     Routes.sendErrorResponse(resp, 500, `Failed to create reminder, maybe the user not registered properly ${error}`)
                 }
             })
+            .patch('/reminders/:id', Routes.needsAuthorization, async (req, resp)=>{
+                try {
+                    if (!req.params.id) {
+                        Routes.sendErrorResponse(resp, 400, `To update a reminder done, id is mandatory`)
+                    }
+                    if (!req.body.description || !req.body.due) {
+                        Routes.sendErrorResponse(resp, 400, `all the fields description and due is required`)
+                    }
+                    let r = await Reminder.update(SingeltonDatalayer, Routes.getSessionCookie(req), req.params.id, req.body.description, req.body.due)
+                    resp.send(r)
+                } catch (error) {
+                    Routes.sendErrorResponse(resp, 500, `Failed to upadte reminder ${error}`)
+                }
+            })
             .patch('/reminders/done/:id', Routes.needsAuthorization, async (req, resp) => {
                 try {
                     if (!req.params.id) {
